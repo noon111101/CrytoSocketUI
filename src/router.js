@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Chat from './components/Chat.vue'
-import Error from "./components/Error.vue";
-import Home from "./components/Home.vue";
+import Chat from './pages/Market.vue'
+import Error from "./pages/Error.vue";
+import Home from "./pages/Home.vue";
 
 const routes = [
     {
@@ -10,7 +10,7 @@ const routes = [
         component: Home
     },
     {
-        path: '/chat',
+        path: '/market',
         component: Chat
     },
     {

@@ -65,7 +65,7 @@ export default {
         const token = response.data;
         if (token) {
           await this.getUser(token);
-          this.$router.push('/chat');
+          this.$router.push('/market');
         } else {
           throw new Error('Không có mã token trong phản hồi');
         }
