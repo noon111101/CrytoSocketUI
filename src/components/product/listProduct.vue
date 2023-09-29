@@ -2,7 +2,8 @@
   <div style="width: 1000px">
     <h1>Product</h1>
     <div v-for="(p,index) in products" :key="index">
-      <div class="d-flex flex-row">
+      <el-card shadow="hover" class="my-4">
+        <router-link class="d-flex flex-row" :to="`/product/${p.id}`">
         <div class="col-3">
             <div>{{p.symbol}}</div>
             <div>{{p.companyName}}</div>
@@ -16,7 +17,8 @@ sd
         <div class="col-2">
 sd
         </div>
-      </div>
+        </router-link>
+      </el-card>
     </div>
   </div>
 </template>

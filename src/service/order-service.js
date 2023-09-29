@@ -15,5 +15,14 @@ getAll() {
     delete(id) {
         return axios.delete(`/order/${id}`);
     }
+    orderMatchLog(id) {
+        return axios.get(`/order/match/${id}`);
+    }
+    findListBuyOrderOpenByProductId(id) {
+        return axios.get(`/order/buy/${id}`);
+    }
+    findListSellOrderOpenByProductId(id) {
+        return axios.get(`/order/sell/${id}`);
+    }
 }
 export default new OrderService();
