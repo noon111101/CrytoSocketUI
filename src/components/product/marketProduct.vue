@@ -1,10 +1,14 @@
 <template>
-  <div>
-    <h1>{{product.symbol}}</h1>
-    <div>{{product.companyName}}</div>
+  <div >
+    <div class="position-relative">
+      <h1>{{product.symbol}}</h1>
+      <div>{{product.companyName}}</div>
+      <span class="position-absolute top-50 end-0">Số dư : {{userBalance}}$</span>
+    </div>
+
     <div class="d-flex flex-row">
-      <div class="col mx-2 my-2">{{product.currentPrice*(100+product.change)/100}}</div>
-      <div class="col mx-2 my-2">{{product.currentPrice}}</div>
+      <div class="col mx-2 my-2">{{product.currentPrice*(100+product.change)/100 +'$'}}</div>
+      <div class="col mx-2 my-2">{{product.currentPrice +'$'}}</div>
       <div class="col mx-2 my-2">{{product.marketCap}}</div>
       <div class="col mx-2 my-2">{{product.peRatio}}</div>
     </div>
@@ -20,10 +24,18 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="price" label="Mua" width="180" header-align="right" align="right" />
+        <el-table-column label="Mua" header-align="right" align="right" >
+          <template #default="scope">
+              <div>{{scope.row.price + '$'}}</div>
+          </template>
+        </el-table-column>
       </el-table>
       <el-table :data="tableSell"  stripe style="width: 100%">
-        <el-table-column prop="price" label="Bán" width="180" />
+        <el-table-column  label="Bán">
+        <template #default="scope">
+            <div>{{scope.row.price + '$'}}</div>
+        </template>
+        </el-table-column>
         <el-table-column label="Khối lượng" width="180" header-align="right">
           <template #default="scope">
             <div style="display: flex; align-items: center;float: right">
@@ -42,7 +54,7 @@
           <div :style="{ color: l.typeClose === 'BUY' ? 'green' : 'red' }">
             <span class="mx-2">Người mua : {{l.buyUserName}}</span>
             <span class="mx-2">Thời gian : {{l.matchTime}}</span>
-            <span class="mx-2 ">Giá : {{l.price}}</span>
+            <span class="mx-2 ">Giá : {{l.price}}$</span>
             <span class="mx-2 ">Khối lượng : {{l.quantity}}</span>
             <span class="mx-2 ">{{l.typeClose}}</span>
             <span class="mx-2">Người bán : {{l.sellUserName}}</span>
@@ -100,6 +112,7 @@ import productService from "../../service/product-service.js";
 import $ from "jquery";
 import axios from "../../http-common.js";
 import OrderService from "../../service/order-service.js";
+import authenService from "../../service/authen-service.js";
 
 export default {
   name : 'marketProduct',
@@ -108,6 +121,7 @@ export default {
       product: [],
       connected: false,
       connectedLog: false,
+      userBalance:null,
       username:null,
       tableBuy: [],
       tableSell: [],
@@ -121,7 +135,7 @@ export default {
       buyName: '',
       buyQuantity: '',
       productId: '',
-      userId: localStorage.getItem('userId') || '',
+      userId: '',
     }
   },
   methods: {
@@ -189,6 +203,7 @@ export default {
           console.log(parsedData);
           await this.tableLog.push(parsedData);
           this.loadTableOrder()
+          this.getCurrentUser()
         }
       }
     },
@@ -259,10 +274,17 @@ export default {
       OrderService.orderMatchLog(this.productId).then((response) => {
         this.tableLog = response.data;
       })
+    },
+    getCurrentUser(){
+      this.userId= localStorage.getItem('userId');
+      authenService.getDetailUser(this.userId).then((response) => {
+        this.userBalance = response.data.balance;
+      });
     }
 
   },
   mounted() {
+    this.getCurrentUser()
     this.username = localStorage.getItem('username');
     this.$nextTick(() => {
       this.connectOrderSocket();

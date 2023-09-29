@@ -12,5 +12,8 @@ class AuthService {
     getCurrentUser() {
         return JSON.parse(localStorage.getItem('user'));
     }
+    getDetailUser(id) {
+        return axios.get(`/users/details/${id}`);
+    }
 }
 export default new AuthService();
